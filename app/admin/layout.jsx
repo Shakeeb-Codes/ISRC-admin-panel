@@ -1,12 +1,23 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/admin/Sidebar';
 import Header from '@/components/admin/Header';
 
-export const metadata = {
-  title: 'Admin Panel - NGO',
-  description: 'Manage your NGO content and media',
-};
-
 export default function AdminLayout({ children }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    
+    if (!isAuthenticated || isAuthenticated !== 'true') {
+      // Redirect to login if not authenticated
+      router.push('/');
+    }
+  }, [router]);
+
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       <Sidebar />
