@@ -154,19 +154,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          {/* Demo Credentials Notice */}
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs text-blue-800 text-center font-semibold mb-1">
-              Demo Credentials (Remove in Production)
-            </p>
-            <p className="text-xs text-blue-600 text-center">
-              Email: <span className="font-mono font-semibold">admin@isrc.lk</span>
-            </p>
-            <p className="text-xs text-blue-600 text-center">
-              Password: <span className="font-mono font-semibold">admin123</span>
-            </p>
-          </div>
         </div>
 
         {/* Footer */}
