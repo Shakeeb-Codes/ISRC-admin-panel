@@ -2,7 +2,7 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { Bold, Italic, List, ListOrdered, Link as LinkIcon, Heading1, Heading2, Undo, Redo } from 'lucide-react';
+import { Bold, Italic, Underline, List, ListOrdered, Link as LinkIcon, Undo, Redo } from 'lucide-react';
 
 export default function RichTextEditor({ content, onChange }) {
   const editor = useEditor({
@@ -69,24 +69,13 @@ export default function RichTextEditor({ content, onChange }) {
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={`p-2 rounded transition-colors ${
-            editor.isActive('heading', { level: 1 }) ? 'bg-[#009cd6] text-white' : 'hover:bg-gray-200'
+            editor.isActive('underline') ? 'bg-[#009cd6] text-white' : 'hover:bg-gray-200'
           }`}
-          title="Heading 1"
+          title="UnderLine (Ctrl+U)"
         >
-          <Heading1 size={18} />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={`p-2 rounded transition-colors ${
-            editor.isActive('heading', { level: 2 }) ? 'bg-[#009cd6] text-white' : 'hover:bg-gray-200'
-          }`}
-          title="Heading 2"
-        >
-          <Heading2 size={18} />
+          <Underline size={18} />
         </button>
 
         <div className="w-px h-6 bg-gray-300 mx-1"></div>

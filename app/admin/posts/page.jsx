@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Plus, Search, Filter, Edit2, Trash2, Eye } from 'lucide-react';
-import { getAllPosts } from '@/lib/dummyData';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Plus, Search, Filter, Edit2, Trash2, Eye } from "lucide-react";
+import { getAllPosts } from "@/lib/dummyData";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
 
   useEffect(() => {
     loadPosts();
@@ -32,15 +32,18 @@ export default function PostsPage() {
     let filtered = [...posts];
 
     // Filter by status
-    if (filterStatus !== 'all') {
-      filtered = filtered.filter(post => post.status.toLowerCase() === filterStatus.toLowerCase());
+    if (filterStatus !== "all") {
+      filtered = filtered.filter(
+        (post) => post.status.toLowerCase() === filterStatus.toLowerCase(),
+      );
     }
 
     // Filter by search query
     if (searchQuery.trim()) {
-      filtered = filtered.filter(post =>
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.description.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.description.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
 
@@ -49,21 +52,21 @@ export default function PostsPage() {
 
   const handleDelete = (postId, postTitle) => {
     if (confirm(`Are you sure you want to delete "${postTitle}"?`)) {
-      setPosts(posts.filter(post => post.id !== postId));
-      alert('Post deleted successfully!');
+      setPosts(posts.filter((post) => post.id !== postId));
+      alert("Post deleted successfully!");
     }
   };
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
-      case 'published':
-        return 'bg-green-100 text-green-800';
-      case 'draft':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'scheduled':
-        return 'bg-blue-100 text-blue-800';
+      case "published":
+        return "bg-green-100 text-green-800";
+      case "draft":
+        return "bg-yellow-100 text-yellow-800";
+      case "scheduled":
+        return "bg-blue-100 text-blue-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -74,7 +77,9 @@ export default function PostsPage() {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Posts</h2>
-            <p className="text-gray-600">Manage all your blog posts and articles</p>
+            <p className="text-gray-600">
+              Manage all your blog posts and articles
+            </p>
           </div>
           <Link
             href="/admin/posts/new"
@@ -131,9 +136,9 @@ export default function PostsPage() {
       ) : filteredPosts.length === 0 ? (
         <div className="bg-white rounded-lg p-12 text-center shadow-sm">
           <p className="text-gray-500 text-lg mb-4">
-            {searchQuery || filterStatus !== 'all'
-              ? 'No posts found matching your filters'
-              : 'No posts yet. Create your first post!'}
+            {searchQuery || filterStatus !== "all"
+              ? "No posts found matching your filters"
+              : "No posts yet. Create your first post!"}
           </p>
           <Link
             href="/admin/posts/new"
@@ -167,29 +172,24 @@ export default function PostsPage() {
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold text-gray-800">{post.title}</h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(post.status)}`}>
+                        <h3 className="text-xl font-bold text-gray-800">
+                          {post.title}
+                        </h3>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(post.status)}`}
+                        >
                           {post.status}
                         </span>
                       </div>
-                      <p className="text-gray-600 line-clamp-2">{post.description}</p>
+                      <p className="text-gray-600 line-clamp-2">
+                        {post.description}
+                      </p>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span>By {post.author}</span>
-                      <span>•</span>
                       <span>{post.createdAt}</span>
-                      {post.views > 0 && (
-                        <>
-                          <span>•</span>
-                          <span className="flex items-center gap-1">
-                            <Eye size={14} />
-                            {post.views} views
-                          </span>
-                        </>
-                      )}
                     </div>
 
                     {/* Actions */}

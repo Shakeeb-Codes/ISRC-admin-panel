@@ -62,8 +62,8 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10">
           {/* Logo & Title */}
           <div className="text-center mb-8">
-            <div className="w-24 h-24 bg-[#009cd6] rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-white font-bold text-4xl"><img src="/images/logo.png" alt="" />
+            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <span className="font-bold text-1xl"><img src="/images/logo.png" alt="ISRC Logo" />
               </span>
             </div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">ISRC Sri Lanka</h1>
