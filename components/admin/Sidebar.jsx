@@ -8,7 +8,6 @@ import {
   FileText,
   PlusCircle,
   Image,
-  Settings,
   LogOut,
 } from "lucide-react";
 
@@ -20,7 +19,6 @@ export default function Sidebar() {
     { href: "/admin/posts", label: "Posts", icon: FileText },
     { href: "/admin/posts/new", label: "Add New Post", icon: PlusCircle },
     { href: "/admin/media", label: "Media Library", icon: Image },
-    { href: "/admin/settings", label: "Settings", icon: Settings },
   ];
 
   const handleLogout = () => {
