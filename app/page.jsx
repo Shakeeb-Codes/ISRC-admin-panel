@@ -40,7 +40,7 @@ export default function LoginPage() {
     // Simulate API call (remove this when you have real API)
     setTimeout(() => {
       // Demo credentials for testing
-      if (formData.email === 'admin@isrc.lk' && formData.password === 'admin123') {
+      if (formData.email === 'mail@isrclanka.org' && formData.password === 'admin123') {
         // Store authentication
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userEmail', formData.email);
@@ -89,7 +89,7 @@ export default function LoginPage() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="admin@isrc.lk"
+                placeholder="mail@isrclanka.org"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009cd6] focus:border-transparent transition-all"
                 disabled={isLoading}
               />

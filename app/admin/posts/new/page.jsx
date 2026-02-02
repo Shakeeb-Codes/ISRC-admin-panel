@@ -219,29 +219,20 @@ export default function NewPostPage() {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Category *</h3>
             <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009cd6]">
               <option value="">Select Category</option>
-              <option value="Income Generation Project - IGP">Income Generation Project - IGP</option>
-              <option value="Education">Education</option>
-              <option value="Health">Health</option>
-              <option value="Environment">Environment</option>
-              <option value="Community Development">Community Development</option>
+              <option value="Economic Development">Economic Development</option>
               <option value="Emergency Relief">Emergency Relief</option>
+              <option value="Peace Building & Social Harmony">Peace Building & Social Harmony</option>
+              <option value="Education">Education</option>
+              <option value="Orphan Care">Orphan Care</option>
+              <option value="Health & Nutrition">Health & Nutrition</option>
+              <option value="Shelter">Shelter</option>
+              <option value="Wash">Wash</option>
             </select>
           </div>
 
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Post Date</h3>
             <input type="date" value={formData.date} onChange={(e) => setFormData({ ...formData, date: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009cd6]" />
-          </div>
-
-          <div className="bg-blue-50 rounded-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-3">Post Structure</h3>
-            <ul className="text-sm text-gray-700 space-y-2">
-              <li>1️⃣ Featured Image (large, top)</li>
-              <li>2️⃣ Date & Category</li>
-              <li>3️⃣ Title (heading)</li>
-              <li>4️⃣ Content (description)</li>
-              <li>5️⃣ Gallery Images (bottom)</li>
-            </ul>
           </div>
         </div>
       </div>
