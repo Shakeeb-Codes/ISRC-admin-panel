@@ -111,7 +111,7 @@ export default function LoginPage() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="mail@isrclanka.org"
+                placeholder="Enter your email"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009cd6] focus:border-transparent transition-all"
                 disabled={isLoading}
               />
@@ -176,21 +176,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs text-blue-800 text-center font-semibold mb-2">
-              Demo Credentials
-            </p>
-            <div className="space-y-1">
-              <p className="text-xs text-blue-600 text-center">
-                <strong>Admin:</strong> mail@isrclanka.org / admin123
-              </p>
-              <p className="text-xs text-blue-600 text-center">
-                <strong>Staff:</strong> Create via Staff Management
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
