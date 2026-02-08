@@ -2,137 +2,148 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Edit2, Trash2, Eye } from 'lucide-react';
+import { Edit, Trash2, Eye } from 'lucide-react';
 import { getRecentPosts } from '@/lib/dummyData';
 
 export default function RecentPosts() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState('staff');
+  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     loadPosts();
+    
+    // Get user role and email
+    const role = localStorage.getItem('userRole') || 'staff';
+    const email = localStorage.getItem('userEmail') || '';
+    setUserRole(role);
+    setUserEmail(email);
   }, []);
 
   const loadPosts = async () => {
     setLoading(true);
-    const data = await getRecentPosts(5);
+    const data = await getRecentPosts();
     setPosts(data);
     setLoading(false);
   };
 
-  const handleEdit = (postId) => {
-    // TODO: Navigate to edit page or open edit modal
-    window.location.href = `/admin/posts/${postId}/edit`;
-  };
-
-  const handleDelete = (postId, postTitle) => {
-    if (confirm(`Are you sure you want to delete "${postTitle}"?`)) {
-      // TODO: Add delete API call
-      setPosts(posts.filter(post => post.id !== postId));
+  const handleDelete = (id, title) => {
+    if (confirm(`Are you sure you want to delete "${title}"?`)) {
+      // TODO: Replace with API call
+      // await fetch(`/api/posts/${id}`, { method: 'DELETE' });
+      
+      setPosts(posts.filter((post) => post.id !== id));
       alert('Post deleted successfully!');
     }
   };
 
-  const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
-      case 'published':
-        return 'bg-green-100 text-green-800';
-      case 'draft':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'scheduled':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
+  // Check if user can edit/delete this post
+  const canModifyPost = (post) => {
+    // Admin can modify all posts
+    if (userRole === 'admin') return true;
+    
+    // Staff can only modify their own posts
+    return post.author === userEmail;
   };
-
-  if (loading) {
-    return (
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Recent Posts</h2>
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse">
-              <div className="h-20 bg-gray-200 rounded-lg"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-800">Recent Posts</h2>
-        <Link 
+        <Link
           href="/admin/posts"
-          className="text-[#009cd6] hover:text-[#0088bd] font-semibold text-sm"
+          className="text-[#009cd6] hover:text-[#0088bd] font-semibold text-sm transition-colors"
         >
           View All →
         </Link>
       </div>
 
-      <div className="space-y-4">
-        {posts.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <p>No posts yet. Create your first post!</p>
-          </div>
-        ) : (
-          posts.map((post) => (
-            <div
-              key={post.id}
-              className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-[#009cd6] transition-all hover:shadow-sm"
-            >
-              <div className="flex items-center gap-4 flex-1">
+      {loading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="bg-gray-200 rounded-lg h-24 animate-pulse"></div>
+          ))}
+        </div>
+      ) : posts.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-gray-500 mb-4">No posts yet</p>
+          <Link
+            href="/admin/posts/new"
+            className="inline-block px-6 py-2 bg-[#009cd6] text-white rounded-lg hover:bg-[#0088bd] transition-colors"
+          >
+            Create Your First Post
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {posts.map((post) => {
+            const canModify = canModifyPost(post);
+            
+            return (
+              <div
+                key={post.id}
+                className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100"
+              >
                 {/* Post Image */}
-                {post.image && (
-                  <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                />
 
                 {/* Post Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-gray-800 truncate">
-                      {post.title}
-                    </h3>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(post.status)}`}>
+                  <h3 className="font-semibold text-gray-800 mb-1 truncate">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                    {post.description}
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <span>{post.createdAt}</span>
+                    <span
+                      className={`px-2 py-1 rounded-full font-semibold ${
+                        post.status === 'published'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
                       {post.status}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 flex items-center gap-4">
-                    <span>{post.createdAt}</span>
-                  </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 flex-shrink-0">
+                  {canModify ? (
+                    <>
+                      <button
+                        onClick={() => alert('Edit feature coming soon!')}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        title="Edit"
+                      >
+                        <Edit size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(post.id, post.title)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex items-center px-3 py-2 bg-gray-50 text-gray-400 rounded-lg text-xs">
+                      <span>No access</span>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-2 ml-4">
-                <button
-                  onClick={() => handleEdit(post.id)}
-                  className="p-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  title="Edit"
-                >
-                  <Edit2 size={16} />
-                </button>
-                <button
-                  onClick={() => handleDelete(post.id, post.title)}
-                  className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                  title="Delete"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

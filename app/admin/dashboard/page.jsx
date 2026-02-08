@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import StatCard from '@/components/admin/StatCard';
-import QuickPost from '@/components/admin/QuickPost';
 import RecentPosts from '@/components/admin/RecentPosts';
-import MediaGrid from '@/components/admin/MediaGrid';
 import { getStats } from '@/lib/dummyData';
 
 export default function DashboardPage() {
@@ -45,13 +43,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <QuickPost />
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-8">
         <RecentPosts />
       </div>
 
       {/* Media Library */}
-      <MediaGrid limit={6} showHeader={true} />
     </>
   );
 }

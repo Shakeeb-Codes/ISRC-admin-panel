@@ -1,32 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Home,
   FileText,
   PlusCircle,
-  Image,
+  Users,
   LogOut,
   X,
 } from "lucide-react";
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const pathname = usePathname();
+  const [userRole, setUserRole] = useState('staff');
 
-  const navItems = [
+  useEffect(() => {
+    // Get user role from localStorage
+    const role = localStorage.getItem('userRole') || 'staff';
+    setUserRole(role);
+  }, []);
+
+  // Base navigation items (visible to all)
+  const baseNavItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: Home },
     { href: "/admin/posts", label: "Posts", icon: FileText },
     { href: "/admin/posts/new", label: "Add New Post", icon: PlusCircle },
-    { href: "/admin/media", label: "Media Library", icon: Image },
   ];
+
+  // Admin-only items
+  const adminNavItems = [
+    { href: "/admin/staff", label: "Staff Management", icon: Users },
+  ];
+
+  // Combine nav items based on role
+  const navItems = userRole === 'admin' 
+    ? [...baseNavItems, ...adminNavItems] 
+    : baseNavItems;
 
   const handleLogout = () => {
     if (confirm("Are you sure you want to logout?")) {
       localStorage.removeItem("isAuthenticated");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userName");
+      localStorage.removeItem("userRole");
       window.location.href = "/";
     }
   };
@@ -55,7 +73,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       >
         {/* Logo */}
         <div className="p-6 flex items-center justify-between border-b border-gray-700">
-          <div href="#" className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <img src="/images/sidebar-logo.png" alt="ISRC Logo" width={150} />
           </div>
 
@@ -66,6 +84,12 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           >
             <X size={24} />
           </button>
+        </div>
+
+        {/* User Role Badge */}
+        <div className="px-6 py-3 bg-[#0088bd]">
+          <p className="text-xs text-gray-200">Logged in as</p>
+          <p className="text-sm font-semibold capitalize">{userRole}</p>
         </div>
 
         {/* Navigation */}
@@ -82,7 +106,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
                   isActive
                     ? "bg-[#2c3e50] text-white shadow-lg"
-                    : "text-white-300 hover:bg-gray-700"
+                    : "text-white hover:bg-gray-700"
                 }`}
               >
                 <Icon size={20} />
@@ -95,7 +119,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-8 py-4 text-white-300 hover:bg-gray-700 transition-all border-t border-gray-700"
+          className="flex items-center gap-3 px-8 py-4 text-white hover:bg-gray-700 transition-all border-t border-gray-700"
         >
           <LogOut size={20} />
           <span>Logout</span>

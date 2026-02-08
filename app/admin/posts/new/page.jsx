@@ -201,7 +201,6 @@ export default function NewPostPage() {
                 <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009cd6]">
                   <option value="draft">Draft</option>
                   <option value="published">Published</option>
-                  <option value="scheduled">Scheduled</option>
                 </select>
               </div>
               <div className="pt-4 border-t border-gray-200 space-y-3">
@@ -227,6 +226,7 @@ export default function NewPostPage() {
               <option value="Health & Nutrition">Health & Nutrition</option>
               <option value="Shelter">Shelter</option>
               <option value="Wash">Wash</option>
+              <option value="General">General</option>
             </select>
           </div>
 

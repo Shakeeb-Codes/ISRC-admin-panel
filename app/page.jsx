@@ -37,14 +37,37 @@ export default function LoginPage() {
     //   body: JSON.stringify(formData) 
     // });
 
-    // Simulate API call (remove this when you have real API)
+    // Simulate API call
     setTimeout(() => {
-      // Demo credentials for testing
+      let userFound = false;
+      let userRole = '';
+      let userName = '';
+
+      // Check if admin
       if (formData.email === 'mail@isrclanka.org' && formData.password === 'admin123') {
+        userFound = true;
+        userRole = 'admin';
+        userName = 'Admin User';
+      } else {
+        // Check if staff (from localStorage)
+        const staffCredentials = JSON.parse(localStorage.getItem('staffCredentials') || '[]');
+        const staffUser = staffCredentials.find(
+          s => s.email === formData.email && s.password === formData.password
+        );
+
+        if (staffUser) {
+          userFound = true;
+          userRole = 'staff';
+          userName = staffUser.name;
+        }
+      }
+
+      if (userFound) {
         // Store authentication
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userEmail', formData.email);
-        localStorage.setItem('userName', 'Admin User');
+        localStorage.setItem('userName', userName);
+        localStorage.setItem('userRole', userRole);
         
         // Redirect to dashboard
         router.push('/admin/dashboard');
@@ -63,8 +86,7 @@ export default function LoginPage() {
           {/* Logo & Title */}
           <div className="text-center mb-8">
             <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="font-bold text-1xl"><img src="/images/logo.png" alt="ISRC Logo" />
-              </span>
+              <img src="/images/logo.png" alt="ISRC Logo" />
             </div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">ISRC Sri Lanka</h1>
             <p className="text-gray-600">Admin Panel</p>
@@ -154,6 +176,21 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+
+          {/* Demo Credentials */}
+          <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs text-blue-800 text-center font-semibold mb-2">
+              Demo Credentials
+            </p>
+            <div className="space-y-1">
+              <p className="text-xs text-blue-600 text-center">
+                <strong>Admin:</strong> mail@isrclanka.org / admin123
+              </p>
+              <p className="text-xs text-blue-600 text-center">
+                <strong>Staff:</strong> Create via Staff Management
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Footer */}
