@@ -13,8 +13,6 @@ export default function MediaGrid({ limit = 6, showHeader = true }) {
 
   const loadMedia = async () => {
     setLoading(true);
-    // Start with empty array - images will be added when user uploads
-    // When you get API endpoints, replace this with: const data = await fetch('/api/media');
     setMedia([]);
     setLoading(false);
   };

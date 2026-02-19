@@ -1,31 +1,36 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Menu } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Menu } from "lucide-react";
+import { graphqlRequest } from "../../lib/api";
 
 export default function Header({ toggleSidebar }) {
-  const [userRole, setUserRole] = useState('staff');
-  const [userName, setUserName] = useState('User');
-  const [userProfilePic, setUserProfilePic] = useState(null);
+  const [userRole, setUserRole] = useState("staff");
+  const [userName, setUserName] = useState("User");
 
   useEffect(() => {
-    // Get user info from localStorage
-    const role = localStorage.getItem('userRole') || 'staff';
-    const name = localStorage.getItem('userName') || 'User';
-    const email = localStorage.getItem('userEmail') || '';
-    
-    setUserRole(role);
-    setUserName(name);
+    const fetchUserData = async () => {
+      const query = `
+        query {
+          me {
+            first_name
+            last_name
+            role
+          }
+        }
+      `;
 
-    // If staff, get their profile picture from staff list
-    if (role === 'staff') {
-      const staffList = JSON.parse(localStorage.getItem('staffList') || '[]');
-      const currentStaff = staffList.find(s => s.email === email);
-      
-      if (currentStaff && currentStaff.profilePic) {
-        setUserProfilePic(currentStaff.profilePic);
+      const data = await graphqlRequest(query);
+
+      if (data?.me) {
+        setUserName(`${data.me.first_name} ${data.me.last_name}`);
+        setUserRole(data.me.role);
+        localStorage.setItem("userName", `${data.me.first_name} ${data.me.last_name}`);
+        localStorage.setItem("userRole", data.me.role);
       }
-    }
+    };
+
+    fetchUserData();
   }, []);
 
   return (
@@ -41,32 +46,33 @@ export default function Header({ toggleSidebar }) {
             <Menu size={24} className="text-gray-600" />
           </button>
 
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">Admin Panel</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800 truncate">
+            Admin Panel
+          </h1>
         </div>
 
         {/* Right: Profile */}
         <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
           {/* User Profile */}
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="text-right hidden md:block">
+          <div className="flex items-center gap-3">
+            {/* Name + Role */}
+            <div className="text-right hidden md:block leading-tight">
               <p className="text-sm font-semibold text-gray-800">{userName}</p>
               <p className="text-xs text-gray-500 capitalize">{userRole}</p>
             </div>
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full overflow-hidden transition-all flex-shrink-0 bg-white border-2 border-gray-200">
-              {userRole === 'admin' ? (
-                // Admin: Show ISRC logo
+
+            {/* Avatar */}
+            <div className="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0 border border-gray-300 bg-gray-100 overflow-hidden">
+              {userRole === "admin" ? (
                 <img
                   src="/images/logo.png"
                   alt="Admin"
                   className="w-full h-full object-contain p-1"
                 />
               ) : (
-                // Staff: Show their profile picture
-                <img
-                  src={userProfilePic || 'https://via.placeholder.com/100'}
-                  alt={userName}
-                  className="w-full h-full object-cover"
-                />
+                <span className="text-sm font-semibold text-gray-700">
+                  {userName?.charAt(0).toUpperCase()}
+                </span>
               )}
             </div>
           </div>

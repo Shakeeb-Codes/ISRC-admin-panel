@@ -8,8 +8,10 @@ import {
   FileText,
   PlusCircle,
   Users,
+  Heart,
   LogOut,
   X,
+  Tag,
 } from "lucide-react";
 
 export default function Sidebar({ isOpen, setIsOpen }) {
@@ -17,30 +19,30 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const [userRole, setUserRole] = useState('staff');
 
   useEffect(() => {
-    // Get user role from localStorage
     const role = localStorage.getItem('userRole') || 'staff';
     setUserRole(role);
   }, []);
 
-  // Base navigation items (visible to all)
   const baseNavItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: Home },
     { href: "/admin/posts", label: "Posts", icon: FileText },
+    { href: "/admin/posts/categories", label: "Categories", icon: Tag },
     { href: "/admin/posts/new", label: "Add New Post", icon: PlusCircle },
+    { href: "/admin/donations/new", label: "Add Donation Program", icon: PlusCircle },
   ];
 
-  // Admin-only items
   const adminNavItems = [
+    { href: "/admin/donations", label: "Donations", icon: Heart },
     { href: "/admin/staff", label: "Staff Management", icon: Users },
   ];
 
-  // Combine nav items based on role
   const navItems = userRole === 'admin' 
     ? [...baseNavItems, ...adminNavItems] 
     : baseNavItems;
 
   const handleLogout = () => {
     if (confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem("token");
       localStorage.removeItem("isAuthenticated");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userName");

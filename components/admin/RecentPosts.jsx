@@ -2,146 +2,124 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Edit, Trash2, Eye } from 'lucide-react';
-import { getRecentPosts } from '@/lib/dummyData';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+import { graphqlRequest } from '@/lib/api';
+
+// Dynamically construct the image path using your .env variable
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/graphql';
+const BASE_DOMAIN = API_URL.replace('/graphql', ''); 
+const IMAGE_BASE_URL = `${BASE_DOMAIN}/uploads/posts/`;
+
+const GET_RECENT_POSTS_QUERY = `
+  query {
+    getCategories {
+      title
+      posts {
+        id
+        title
+        content
+        status
+        banner_image
+      }
+    }
+  }
+`;
 
 export default function RecentPosts() {
+  const router = useRouter();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState('staff');
-  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     loadPosts();
-    
-    // Get user role and email
     const role = localStorage.getItem('userRole') || 'staff';
-    const email = localStorage.getItem('userEmail') || '';
     setUserRole(role);
-    setUserEmail(email);
   }, []);
 
   const loadPosts = async () => {
     setLoading(true);
-    const data = await getRecentPosts();
-    setPosts(data);
-    setLoading(false);
-  };
+    try {
+      const result = await graphqlRequest(GET_RECENT_POSTS_QUERY);
+      if (result?.getCategories) {
+        const allPosts = result.getCategories.flatMap(cat => 
+          (cat.posts || []).map(p => ({
+            ...p,
+            categoryName: cat.title,
+            image: p.banner_image 
+              ? `${IMAGE_BASE_URL}${p.banner_image}` 
+              : 'https://via.placeholder.com/150?text=No+Image',
+            description: p.content ? p.content.replace(/<[^>]*>/g, '').substring(0, 80) : ''
+          }))
+        );
 
-  const handleDelete = (id, title) => {
-    if (confirm(`Are you sure you want to delete "${title}"?`)) {
-      // TODO: Replace with API call
-      // await fetch(`/api/posts/${id}`, { method: 'DELETE' });
-      
-      setPosts(posts.filter((post) => post.id !== id));
-      alert('Post deleted successfully!');
+        const recent = allPosts
+          .sort((a, b) => Number(b.id) - Number(a.id))
+          .slice(0, 3);
+
+        setPosts(recent);
+      }
+    } catch (error) {
+      console.error("Failed to load recent posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Check if user can edit/delete this post
-  const canModifyPost = (post) => {
-    // Admin can modify all posts
-    if (userRole === 'admin') return true;
-    
-    // Staff can only modify their own posts
-    return post.author === userEmail;
-  };
-
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-800">Recent Posts</h2>
         <Link
           href="/admin/posts"
-          className="text-[#009cd6] hover:text-[#0088bd] font-semibold text-sm transition-colors"
+          className="text-[#009cd6] hover:underline font-bold text-sm"
         >
           View All →
         </Link>
       </div>
 
       {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-gray-200 rounded-lg h-24 animate-pulse"></div>
-          ))}
+        <div className="flex justify-center py-10">
+          <Loader2 className="animate-spin text-[#009cd6]" />
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 mb-4">No posts yet</p>
-          <Link
-            href="/admin/posts/new"
-            className="inline-block px-6 py-2 bg-[#009cd6] text-white rounded-lg hover:bg-[#0088bd] transition-colors"
-          >
-            Create Your First Post
-          </Link>
+          <p className="text-gray-500 mb-4 text-sm">No posts found.</p>
+          <Link href="/admin/posts/new" className="text-sm font-bold text-[#009cd6]">Create One</Link>
         </div>
       ) : (
         <div className="space-y-4">
-          {posts.map((post) => {
-            const canModify = canModifyPost(post);
-            
-            return (
-              <div
-                key={post.id}
-                className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100"
-              >
-                {/* Post Image */}
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-                />
+          {posts.map((post) => (
+            <div
+              key={post.id}
+              className="flex gap-4 p-3 border border-transparent hover:border-gray-100 hover:bg-gray-50 rounded-xl transition-all group"
+            >
+              {/* Image Preview using constructed URL */}
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-16 h-16 object-cover rounded-lg flex-shrink-0 bg-gray-100"
+              />
 
-                {/* Post Info */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-800 mb-1 truncate">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                    {post.description}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-gray-500">
-                    <span>{post.createdAt}</span>
-                    <span
-                      className={`px-2 py-1 rounded-full font-semibold ${
-                        post.status === 'published'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {post.status}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2 flex-shrink-0">
-                  {canModify ? (
-                    <>
-                      <button
-                        onClick={() => alert('Edit feature coming soon!')}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="Edit"
-                      >
-                        <Edit size={18} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(post.id, post.title)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </>
-                  ) : (
-                    <div className="flex items-center px-3 py-2 bg-gray-50 text-gray-400 rounded-lg text-xs">
-                      <span>No access</span>
-                    </div>
-                  )}
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-gray-800 truncate text-sm">
+                  {post.title}
+                </h3>
+                <p className="text-xs text-gray-500 line-clamp-1 mb-2">
+                  {post.description}...
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                    post.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                  }`}>
+                    {post.status}
+                  </span>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       )}
     </div>

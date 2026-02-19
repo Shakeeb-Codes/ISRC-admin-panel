@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff } from 'lucide-react';
+import {graphqlRequest} from '../lib/api'
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,69 +15,45 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError('');
 
-    // Validation
-    if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    if (!formData.email.includes('@')) {
-      setError('Please enter a valid email address');
-      return;
-    }
-
-    setIsLoading(true);
-
-    // TODO: Replace with actual API call when backend is ready
-    // Example: const response = await fetch('/api/auth/login', { 
-    //   method: 'POST', 
-    //   body: JSON.stringify(formData) 
-    // });
-
-    // Simulate API call
-    setTimeout(() => {
-      let userFound = false;
-      let userRole = '';
-      let userName = '';
-
-      // Check if admin
-      if (formData.email === 'mail@isrclanka.org' && formData.password === 'admin123') {
-        userFound = true;
-        userRole = 'admin';
-        userName = 'Admin User';
-      } else {
-        // Check if staff (from localStorage)
-        const staffCredentials = JSON.parse(localStorage.getItem('staffCredentials') || '[]');
-        const staffUser = staffCredentials.find(
-          s => s.email === formData.email && s.password === formData.password
-        );
-
-        if (staffUser) {
-          userFound = true;
-          userRole = 'staff';
-          userName = staffUser.name;
+  try {
+    const loginMutation = `
+      mutation Login($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+          token
+          user {
+            first_name
+            last_name
+            role
+          }
         }
       }
+    `;
 
-      if (userFound) {
-        // Store authentication
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userEmail', formData.email);
-        localStorage.setItem('userName', userName);
-        localStorage.setItem('userRole', userRole);
-        
-        // Redirect to dashboard
-        router.push('/admin/dashboard');
-      } else {
-        setError('Invalid email or password');
-        setIsLoading(false);
-      }
-    }, 1000);
-  };
+    const data = await graphqlRequest(loginMutation, { 
+      email: formData.email, 
+      password: formData.password 
+    });
+
+    if (data?.login) {
+      localStorage.setItem("token", data.login.token);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userName", `${data.login.user.first_name} ${data.login.user.last_name}`);
+      localStorage.setItem("userRole", data.login.user.role);
+      router.push("/admin/dashboard");
+    } else {
+      setError("Login failed. Please check your email and password.");
+    }
+  } catch (err) {
+    setError(err.message || "Login failed. Please check your email and password.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#009cd6] to-[#0088bd] p-4">
@@ -100,7 +77,7 @@ export default function LoginPage() {
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
