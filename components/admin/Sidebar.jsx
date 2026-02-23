@@ -9,6 +9,7 @@ import {
   PlusCircle,
   Users,
   Heart,
+  HandHeart,
   LogOut,
   X,
   Tag,
@@ -27,8 +28,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
     { href: "/admin/dashboard", label: "Dashboard", icon: Home },
     { href: "/admin/posts", label: "Posts", icon: FileText },
     { href: "/admin/posts/categories", label: "Categories", icon: Tag },
-    { href: "/admin/posts/new", label: "Add New Post", icon: PlusCircle },
-    { href: "/admin/donations/new", label: "Add Donation Program", icon: PlusCircle },
+    { href: "/admin/donations/program", label: "Donation Program", icon: HandHeart },
   ];
 
   const adminNavItems = [

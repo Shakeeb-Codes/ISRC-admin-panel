@@ -29,6 +29,7 @@ export default function CategoryManagementPage() {
       if (response?.getCategories) {
         setCategories(response.getCategories);
       }
+      console.log(response)
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
@@ -141,7 +142,6 @@ export default function CategoryManagementPage() {
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b">
             <tr>
-              <th className="px-6 py-4 text-sm font-semibold text-gray-600">ID</th>
               <th className="px-6 py-4 text-sm font-semibold text-gray-600">Category Title</th>
               <th className="px-6 py-4 text-sm font-semibold text-gray-600">Status</th>
               <th className="px-6 py-4 text-sm font-semibold text-gray-600 text-right">Actions</th>
@@ -161,7 +161,6 @@ export default function CategoryManagementPage() {
             ) : (
               categories.map((cat) => (
                 <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-gray-500 font-mono text-sm">#{cat.id}</td>
                   <td className="px-6 py-4 font-medium text-gray-800">
                     {editingId === cat.id ? (
                       <div className="flex items-center gap-2">
