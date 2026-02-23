@@ -167,8 +167,8 @@ const CreatePostModal = ({ isOpen, onClose, categories, onRefresh }) => {
           {step === 1 ? (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               <div className="lg:col-span-2 space-y-6">
-                <input type="text" placeholder="Enter Title..." className="w-full px-6 py-5 bg-gray-50 border-none rounded-2xl outline-none focus:ring-2 focus:ring-[#009cd6] text-xl font-bold" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
-                <textarea placeholder="Write post content..." className="w-full px-6 py-5 bg-gray-50 border-none rounded-2xl min-h-[300px] outline-none focus:ring-2 focus:ring-[#009cd6] resize-none" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+                <input type="text" placeholder="Enter Title..." className="w-full px-6 py-5 bg-gray-50 border-1 rounded-2xl outline-none focus:ring-2 focus:ring-[#009cd6] text-xl font-bold" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+                <textarea placeholder="Write post content..." className="w-full px-6 py-5 bg-gray-50 border-1 rounded-2xl min-h-[300px] outline-none focus:ring-2 focus:ring-[#009cd6] resize-none" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
               </div>
               
               <div className="space-y-6">
