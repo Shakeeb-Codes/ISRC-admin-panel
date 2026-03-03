@@ -157,9 +157,6 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="mt-6 text-center">
-  <p className="text-white text-sm">
-    © {new Date().getFullYear()} ISRC Sri Lanka. All rights reserved.
-  </p>
   
   <div 
     style={{ 
@@ -167,7 +164,8 @@ export default function LoginPage() {
       alignItems: "center", 
       justifyContent: "center", 
       gap: "8px", 
-      marginTop: "4px" 
+      marginTop: "4px", 
+      marginBottom: "10px", 
     }}
   >
     <p className="text-white text-sm" style={{ margin: 0 }}>
@@ -181,6 +179,9 @@ export default function LoginPage() {
     />
     </a>
   </div>
+  <p className="text-white text-sm">
+    © {new Date().getFullYear()} ISRC Sri Lanka. All rights reserved.
+  </p>
 </div>
       </div>
     </div>

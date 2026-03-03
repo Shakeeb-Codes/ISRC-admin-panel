@@ -6,13 +6,13 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   FileText,
-  PlusCircle,
   Users,
   Heart,
   HandHeart,
   LogOut,
   X,
   Tag,
+  Video,
 } from "lucide-react";
 
 export default function Sidebar({ isOpen, setIsOpen }) {
@@ -27,6 +27,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const baseNavItems = [
     { href: "/admin/dashboard", label: "Dashboard", icon: Home },
     { href: "/admin/posts", label: "Posts", icon: FileText },
+    { href: "/admin/videos", label: "Videos", icon: Video },
     { href: "/admin/posts/categories", label: "Categories", icon: Tag },
     { href: "/admin/donations/program", label: "Donation Program", icon: HandHeart },
   ];
