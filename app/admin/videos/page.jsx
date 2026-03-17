@@ -67,7 +67,7 @@ const VideoModal = ({ isOpen, onClose, onRefresh, editData }) => {
             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">Video Title</label>
             <input 
               type="text" 
-              placeholder="e.g. Blood Donation Highlights" 
+              placeholder="Enter the video title" 
               className="w-full px-6 py-4 bg-gray-50 border rounded-2xl outline-none focus:ring-2 focus:ring-[#009cd6]"
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
@@ -77,7 +77,7 @@ const VideoModal = ({ isOpen, onClose, onRefresh, editData }) => {
             <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-2">YouTube URL</label>
             <input 
               type="text" 
-              placeholder="https://www.youtube.com/watch?v=..." 
+              placeholder="Paste the youtube URL" 
               className="w-full px-6 py-4 bg-gray-50 border rounded-2xl outline-none focus:ring-2 focus:ring-[#009cd6]"
               value={formData.url}
               onChange={(e) => setFormData({...formData, url: e.target.value})}
@@ -143,7 +143,7 @@ export default function VideoAdminPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Multimedia Gallery</h2>
+          <h2 className="text-3xl font-bold text-gray-800 tracking-tight">Video Gallery</h2>
           <p className="text-gray-500 text-sm">Manage YouTube videos shown on the website</p>
         </div>
         <button 
