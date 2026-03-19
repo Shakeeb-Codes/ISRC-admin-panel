@@ -40,6 +40,9 @@ export default function LoginPage() {
     });
 
     if (data?.login) {
+      console.log(data.login);
+      console.log(data.login.user);
+      console.log(data.login.token);
       localStorage.setItem("token", data.login.token);
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userName", `${data.login.user.first_name} ${data.login.user.last_name}`);
