@@ -44,6 +44,7 @@ export default function LoginPage() {
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userName", `${data.login.user.first_name} ${data.login.user.last_name}`);
       localStorage.setItem("userRole", data.login.user.role);
+      localStorage.setItem("userId", data.login.user.id);
       router.push("/admin/dashboard");
     } else {
       setError("Login failed. Please check your email and password.");
