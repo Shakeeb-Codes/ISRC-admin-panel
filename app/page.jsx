@@ -26,6 +26,7 @@ export default function LoginPage() {
         login(email: $email, password: $password) {
           token
           user {
+          id
             first_name
             last_name
             role
