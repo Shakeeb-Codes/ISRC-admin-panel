@@ -9,7 +9,7 @@ import {
 import { graphqlRequest } from '../../../lib/api';
 
 // Configuration
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = "https://api.isrclanka.org/graphql";
 const BASE_DOMAIN = API_URL.replace('/graphql', ''); 
 const IMAGE_BASE_URL = `${BASE_DOMAIN}/uploads/posts/`;
 

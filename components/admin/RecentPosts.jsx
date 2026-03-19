@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
 import { graphqlRequest } from '@/lib/api';
 
 // Dynamically construct the image path using your .env variable
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = "https://api.isrclanka.org/graphql";
 const BASE_DOMAIN = API_URL.replace('/graphql', ''); 
 const IMAGE_BASE_URL = `${BASE_DOMAIN}/uploads/posts/`;
 
